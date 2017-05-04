@@ -6,17 +6,17 @@ import router from './router'
 import VueResource from 'vue-resource'
 import { fixed } from './filters'
 import YDUI from 'vue-ydui'
-import { InfiniteScroll } from 'mint-ui'
 import VideoPlayer from 'vue-video-player'
-import 'vue-ydui/dist/ydui.rem.css'
+import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
+import 'vue-ydui/dist/ydui.rem.css'
 
 Vue.config.productionTip = false
 
 Vue.use(YDUI)
 Vue.use(VueResource)
 Vue.use(VideoPlayer)
-Vue.use(InfiniteScroll)
+Vue.use(MintUI)
 Vue.filter('fixed', fixed)
 
 /* eslint-disable no-new */

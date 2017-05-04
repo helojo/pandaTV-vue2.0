@@ -1,9 +1,12 @@
 <template>
 	<div>
 		<HeaderNav :header="'首页'" :game="'游戏'" :recreation="'娱乐'"></HeaderNav>
+    <div v-show="show" class="img">
+      <img src="../../assets/image/loading.gif"  alt="">
+    </div>
     <yd-slider autoplay="3000">
       <yd-slider-item v-for="image in images">
-          <a href="http://www.ydcss.com">
+          <a :href="'#/room/'+image.roomid">
             <img :src="image.bigimg">
           </a>
       </yd-slider-item>
@@ -13,7 +16,7 @@
         <div class="title">
          <img :src="list.type.icon" alt="" class="title-img">
          <div class="title-name">{{list.type.cname}}</div>
-         <a href="" class="title-link">更多</a>
+         <router-link :to="{ name: 'game', params: { cate: list.type.ename, name:list.type.cname }}" v-show="list.type.ename !== 'hot'" class="title-link">更多</router-link>
         </div>
         <items :items="list.items"></items>
       </div>
@@ -27,7 +30,8 @@
     data (){
       return {
         lists:[],
-        images:[]
+        images:[],
+        show:true
       }
     },
     created () {
@@ -41,6 +45,7 @@
             let data = response.body;
             if(data.errno === 0){
               this.images = data.data;
+              this.show = false;
             }
           },(error) =>{
             console.log(error);
@@ -90,6 +95,13 @@
       display: inline-block;
       padding-left: .25rem;
     }
+  }
+  .img{
+    position:fixed;
+    left:50%;
+    top:50%;
+    margin-top: -140px;
+    margin-left: -120px;
   }
   .title-link{
     float: right;

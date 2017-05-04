@@ -12,14 +12,18 @@
     <div v-show="!show" class="img">
       <img src="../../assets/image/loading.gif"  alt="">
     </div>
-    <div v-infinite-scroll="loadMore"
-        infinite-scroll-disabled="loading"
-        infinite-scroll-immediate-check = "true"
-        infinite-scroll-distance="10">
-        <items :items="lists" v-show="show"></items>
-        <div class="loading" v-show="!loading">加载中...</div>
-    </div>
-    
+    <div class="page-infinite-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
+      <div v-infinite-scroll="loadMore"
+          infinite-scroll-disabled="loading"
+          infinite-scroll-immediate-check = "true"
+          infinite-scroll-distance="10">
+          <items :items="lists" v-show="show"></items>
+      </div>
+      <div class="loading" v-show="loadings">
+        <mt-spinner type="fading-circle"></mt-spinner>
+        拼命加载中...
+      </div>
+    </div> 
 	</div>
 </template>
 <script>
@@ -39,8 +43,11 @@
         active:false,
         page: 1,
         loading:false,
+        loadings:false,
         sort:'lol',
-        total:0
+        total:0,
+        allLoaded: false,
+        wrapperHeight: 0
       }
     },
     created () {
@@ -81,6 +88,7 @@
               this.total = data.data.total;
               if(this.total <  pageno * 10){
                 this.loading = true;
+                this.loadings = false;
               }
             }
           },(error) =>{
@@ -90,8 +98,12 @@
       },
       loadMore(sort) {
         this.loading = true;
+        this.loadings = true;
         this.getserver(this.page,this.sort)
       }
+    },
+    mounted() {
+      this.wrapperHeight = document.documentElement.clientHeight - this.$refs.wrapper.getBoundingClientRect().top;
     },
     components: {
       HeaderNav,items
@@ -149,11 +161,14 @@
     color: #1cd39b;
     border: 0
   }
-  .loading{
-    height:1.5rem;
-    text-align:center;
-    line-height:1.5rem;
-    background: #ddd;
-    font-size:0.7rem;
+  .loading {
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    div {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
   }
 </style>
